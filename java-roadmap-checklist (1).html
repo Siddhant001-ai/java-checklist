@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaRoadmap.checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12161f;
+    --bg-deep:#0b0e15;
+    --surface:#1a2030;
+    --surface-2:#212939;
+    --border:#2a3244;
+    --border-soft:#242c3d;
+    --accent:#e3a857;
+    --accent-soft:#3a2f1e;
+    --accent-dim:#8b6b3d;
+    --success:#5fb88c;
+    --success-soft:#1c2e28;
+    --text:#e7e9ee;
+    --text-muted:#8992a6;
+    --text-dim:#5b6478;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(227,168,87,0.07), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(95,184,140,0.05), transparent 55%),
+      var(--bg-deep);
+    color:var(--text);
+    font-family:var(--sans);
+    min-height:100vh;
+    padding:0 0 80px 0;
+  }
+  ::selection{background:var(--accent-soft); color:var(--accent);}
+
+  a{color:var(--accent);}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    border-bottom:1px solid var(--border);
+    background:rgba(11,14,21,0.9);
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:blur(6px);
+  }
+  .topbar-inner{
+    max-width:880px; margin:0 auto; padding:14px 20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.red{background:#e0645c;}
+  .dot.yellow{background:#e3b74f;}
+  .dot.green{background:#5fb88c;}
+  .filename{
+    font-family:var(--mono); font-size:12.5px; color:var(--text-muted);
+    margin-left:8px; letter-spacing:0.02em;
+  }
+
+  /* ---------- hero / console ---------- */
+  .wrap{max-width:880px; margin:0 auto; padding:0 20px;}
+  .hero{padding:44px 0 0 0;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; color:var(--accent-dim);
+    letter-spacing:0.14em; text-transform:uppercase; margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--mono); font-weight:800; font-size:clamp(28px,5vw,42px);
+    line-height:1.15; margin:0 0 10px 0; letter-spacing:-0.01em;
+  }
+  h1 .brace{color:var(--accent);}
+  .subtitle{
+    font-family:var(--sans); color:var(--text-muted); font-size:15px;
+    max-width:56ch; line-height:1.55; margin:0 0 28px 0;
+  }
+
+  .console{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 20px 20px 20px;
+    font-family:var(--mono);
+    font-size:13px;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,0.6);
+  }
+  .console-line{color:var(--text-dim); margin:0 0 4px 0;}
+  .console-line .prompt{color:var(--success);}
+  .console-line .cmd{color:var(--text);}
+  .console-status{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:12px; flex-wrap:wrap; gap:10px;
+  }
+  .console-status .label{color:var(--text-muted); font-size:12.5px;}
+  .console-status .status-text{
+    font-weight:700; letter-spacing:0.04em;
+  }
+  .status-progress .status-text{color:var(--accent);}
+  .status-done .status-text{color:var(--success);}
+
+  .progress-track{
+    width:100%; height:8px; border-radius:5px; background:var(--surface-2);
+    overflow:hidden; margin-top:12px; border:1px solid var(--border-soft);
+  }
+  .progress-fill{
+    height:100%; border-radius:5px;
+    background:linear-gradient(90deg, var(--accent-dim), var(--accent));
+    width:0%; transition:width .4s ease;
+  }
+  .progress-fill.done{background:linear-gradient(90deg, #3d8f6c, var(--success));}
+
+  .console-meta{
+    display:flex; gap:18px; margin-top:12px; flex-wrap:wrap;
+    font-size:12px; color:var(--text-dim);
+  }
+  .console-meta b{color:var(--text-muted); font-weight:600;}
+
+  /* ---------- controls ---------- */
+  .controls{
+    display:flex; gap:10px; align-items:center; margin:26px 0 18px 0;
+    flex-wrap:wrap;
+  }
+  .search{
+    flex:1; min-width:200px;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:10px 14px;
+    font-family:var(--mono); font-size:13px; color:var(--text);
+  }
+  .search::placeholder{color:var(--text-dim);}
+  .search:focus{outline:none; border-color:var(--accent-dim);}
+
+  .btn{
+    font-family:var(--mono); font-size:12px; color:var(--text-muted);
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:10px 14px; cursor:pointer;
+    white-space:nowrap; transition:border-color .15s, color .15s;
+  }
+  .btn:hover{border-color:var(--accent-dim); color:var(--accent);}
+
+  /* ---------- package blocks ---------- */
+  .package{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .package.all-done{border-color:rgba(95,184,140,0.35);}
+  .package-head{
+    display:flex; align-items:center; gap:12px;
+    padding:14px 16px; cursor:pointer;
+    user-select:none;
+  }
+  .package-head:hover{background:var(--surface-2);}
+  .caret{
+    font-family:var(--mono); color:var(--text-dim); font-size:11px;
+    width:14px; transition:transform .15s;
+  }
+  .package.open .caret{transform:rotate(90deg); color:var(--accent);}
+  .package-num{
+    font-family:var(--mono); font-size:11px; color:var(--bg);
+    background:var(--text-dim); border-radius:5px;
+    width:26px; height:26px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; font-weight:700;
+  }
+  .package.all-done .package-num{background:var(--success); color:#0b1a14;}
+  .package.in-progress .package-num{background:var(--accent); color:#241a08;}
+  .package-title{
+    font-family:var(--sans); font-weight:600; font-size:14.5px; flex:1;
+  }
+  .package-count{
+    font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+    flex-shrink:0;
+  }
+  .package.all-done .package-count{color:var(--success);}
+
+  .package-body{
+    max-height:0; overflow:hidden; transition:max-height .25s ease;
+    border-top:1px solid transparent;
+  }
+  .package.open .package-body{border-top:1px solid var(--border-soft);}
+
+  .topic-list{list-style:none; margin:0; padding:6px 10px 10px 10px;}
+  .topic{
+    display:flex; align-items:flex-start; gap:10px;
+    padding:7px 8px 7px 6px; border-radius:6px;
+    font-family:var(--mono); font-size:13px;
+    cursor:pointer;
+  }
+  .topic:hover{background:var(--surface-2);}
+  .tree{color:var(--text-dim); flex-shrink:0; user-select:none;}
+  .box{
+    flex-shrink:0; width:16px; height:16px; margin-top:1px;
+    border:1.5px solid var(--text-dim); border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+    color:transparent; font-size:11px; font-weight:800;
+  }
+  .topic.checked .box{
+    background:var(--success); border-color:var(--success); color:#0b1a14;
+  }
+  .topic-label{
+    font-family:var(--sans); font-size:13.5px; line-height:1.4; color:var(--text);
+  }
+  .topic.checked .topic-label{color:var(--text-dim); text-decoration:line-through; text-decoration-color:var(--text-dim);}
+  .topic.hidden{display:none;}
+
+  footer{
+    max-width:880px; margin:36px auto 0 auto; padding:0 20px;
+    font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (max-width:560px){
+    .console-status{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+    <span class="filename">~/roadmaps/JavaRoadmap.checklist</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">// progress tracker</div>
+    <h1>Java Roadmap<span class="brace">;</span></h1>
+    <p class="subtitle">Every topic from the basic-to-advanced Java roadmap, organized into 38 packages. Check things off as you learn them &mdash; your progress compiles automatically.</p>
+
+    <div class="console">
+      <p class="console-line"><span class="prompt">$</span> <span class="cmd">mvn compile -f java-roadmap</span></p>
+      <p class="console-line" id="scan-line">[INFO] Scanning 38 packages, 392 classes...</p>
+      <div class="console-status" id="status-row">
+        <span class="label">STATUS</span>
+        <span class="status-text" id="status-text">COMPILING</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="console-meta">
+        <span><b id="meta-done">0</b> / 392 classes compiled</span>
+        <span><b id="meta-pct">0%</b> complete</span>
+        <span><b id="meta-packages">0</b> / 38 packages done</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input class="search" id="search" type="text" placeholder="grep -i 'topic name'  (search all packages)">
+    <button class="btn" id="expand-all">expand --all</button>
+    <button class="btn" id="collapse-all">collapse --all</button>
+    <button class="btn" id="reset-all">reset --progress</button>
+  </div>
+
+  <div id="packages"></div>
+
+  <footer>
+    <span>saved locally to this checklist</span>
+    <span id="last-updated">not started yet</span>
+  </footer>
+</div>
+
+<script>
+const ROADMAP = [{"level": 1, "title": "Introduction to Java", "topics": ["What is Java?", "History of Java", "Features of Java", "Java Editions (SE, EE, ME)", "JDK, JRE, JVM", "Java Architecture", "Installation of JDK", "Setting up IDE (IntelliJ IDEA, Eclipse, VS Code)", "First Java Program", "Compilation Process", "Bytecode", "Java Execution Process"]}, {"level": 2, "title": "Java Fundamentals", "topics": ["Variables", "Primitive Data Types", "Non-Primitive Data Types", "Variable Declaration", "Initialization", "Scope of Variables", "Type Casting", "Type Conversion", "Operators", "Arithmetic", "Assignment", "Relational", "Logical", "Bitwise", "Shift", "Unary", "Ternary", "Input and Output", "Scanner Class", "BufferedReader", "Console Class", "Command Line Arguments", "Printing Output"]}, {"level": 3, "title": "Control Statements", "topics": ["Decision Making", "if", "if-else", "else-if ladder", "Nested if", "switch", "Enhanced switch (Java 14+)", "Loops", "for", "while", "do-while", "Enhanced for loop", "Jump Statements", "break", "continue", "return", "Labeled break", "Labeled continue"]}, {"level": 4, "title": "Methods", "topics": ["Creating Methods", "Method Calling", "Method Parameters", "Return Types", "Method Overloading", "Variable Arguments (varargs)", "Pass by Value", "Recursive Methods"]}, {"level": 5, "title": "Arrays", "topics": ["One Dimensional Array", "Two Dimensional Array", "Multi-Dimensional Array", "Jagged Array", "Array Copy", "Array Sorting", "Searching", "Arrays Class", "Array Algorithms"]}, {"level": 6, "title": "Strings", "topics": ["String Class", "String Pool", "Immutable Strings", "Mutable Strings", "StringBuffer", "StringBuilder", "String Methods", "String Comparison", "String Formatting", "Regular Expressions (Regex)"]}, {"level": 7, "title": "Object-Oriented Programming (Core OOP)", "topics": ["Classes and Objects", "Class", "Object", "Constructor", "Types of Constructors", "this Keyword", "static Keyword", "final Keyword", "Object Class", "Encapsulation", "Access Modifiers", "Getters", "Setters", "Inheritance", "Single", "Multilevel", "Hierarchical", "Polymorphism", "Compile Time", "Runtime", "Abstraction", "Abstract Classes", "Abstract Methods", "Interfaces", "Interface", "Multiple Inheritance", "Functional Interface", "Marker Interface", "Default Methods", "Static Methods"]}, {"level": 8, "title": "Packages", "topics": ["Creating Packages", "Importing Packages", "Built-in Packages", "User Defined Packages", "Package Naming Convention"]}, {"level": 9, "title": "Exception Handling", "topics": ["Exception Hierarchy", "Checked Exception", "Unchecked Exception", "try", "catch", "finally", "throw", "throws", "Multiple Catch", "Nested Try", "Custom Exceptions", "try-with-resources"]}, {"level": 10, "title": "File Handling", "topics": ["File Class", "FileReader", "FileWriter", "BufferedReader", "BufferedWriter", "PrintWriter", "Serialization", "Deserialization", "Object Streams", "Byte Streams", "Character Streams", "NIO Package", "Path", "Files Class"]}, {"level": 11, "title": "Collections Framework", "topics": ["List", "ArrayList", "LinkedList", "Vector", "Stack", "Queue", "PriorityQueue", "Deque", "ArrayDeque", "Set", "HashSet", "LinkedHashSet", "TreeSet", "Map", "HashMap", "LinkedHashMap", "TreeMap", "Hashtable", "WeakHashMap", "IdentityHashMap", "Utilities", "Collections Class", "Comparable", "Comparator", "Iterator", "ListIterator", "Enumeration"]}, {"level": 12, "title": "Generics", "topics": ["Generic Classes", "Generic Methods", "Wildcards", "Bounded Types", "Type Erasure"]}, {"level": 13, "title": "Multithreading", "topics": ["Thread Class", "Runnable Interface", "Thread Lifecycle", "Synchronization", "Locks", "Deadlock", "Thread Priority", "Daemon Thread", "Thread Pool", "Executor Framework", "Callable", "Future", "CompletableFuture"]}, {"level": 14, "title": "Lambda Expressions", "topics": ["Lambda Syntax", "Functional Interfaces", "Method References", "Constructor References"]}, {"level": 15, "title": "Stream API", "topics": ["Streams", "Intermediate Operations", "Terminal Operations", "map()", "filter()", "reduce()", "collect()", "flatMap()", "Parallel Streams"]}, {"level": 16, "title": "Date and Time API", "topics": ["LocalDate", "LocalTime", "LocalDateTime", "ZonedDateTime", "Duration", "Period", "DateTimeFormatter"]}, {"level": 17, "title": "Annotations", "topics": ["Built-in Annotations", "Custom Annotations", "Meta Annotations", "Reflection with Annotations"]}, {"level": 18, "title": "Reflection API", "topics": ["Class Class", "Reflection Methods", "Dynamic Object Creation", "Accessing Private Members"]}, {"level": 19, "title": "Inner Classes", "topics": ["Member Inner Class", "Static Nested Class", "Local Inner Class", "Anonymous Inner Class"]}, {"level": 20, "title": "Java I/O", "topics": ["InputStream", "OutputStream", "Reader", "Writer", "Buffered Streams", "Data Streams", "Object Streams"]}, {"level": 21, "title": "Networking", "topics": ["Socket Programming", "TCP", "UDP", "URL", "HttpURLConnection", "Client Server Applications"]}, {"level": 22, "title": "JDBC (Database Connectivity)", "topics": ["JDBC Architecture", "Drivers", "Connection", "Statement", "PreparedStatement", "CallableStatement", "ResultSet", "Transactions", "Batch Processing"]}, {"level": 23, "title": "GUI Programming", "topics": ["AWT", "Swing", "JavaFX", "Event Handling", "Layout Managers"]}, {"level": 24, "title": "Java Memory Management", "topics": ["Heap", "Stack", "Method Area", "Metaspace", "Garbage Collection", "Memory Leaks", "JVM Tuning"]}, {"level": 25, "title": "Java Concurrency", "topics": ["Executors", "Fork Join Framework", "Atomic Classes", "Concurrent Collections", "Locks", "Semaphore", "CountDownLatch", "CyclicBarrier", "Phaser"]}, {"level": 26, "title": "Functional Programming", "topics": ["Predicate", "Function", "Consumer", "Supplier", "Optional", "Collectors"]}, {"level": 27, "title": "Design Patterns", "topics": ["Creational", "Singleton", "Factory", "Abstract Factory", "Builder", "Prototype", "Structural", "Adapter", "Decorator", "Facade", "Proxy", "Composite", "Bridge", "Flyweight", "Behavioral", "Strategy", "Observer", "Command", "Iterator", "Mediator", "Chain of Responsibility", "State", "Template Method", "Visitor", "Memento"]}, {"level": 28, "title": "Java Modules", "topics": ["Module System", "module-info.java", "Exports", "Requires"]}, {"level": 29, "title": "Java Security", "topics": ["Encryption Basics", "Hashing", "KeyStore", "SSL", "SecureRandom"]}, {"level": 30, "title": "Java Build Tools", "topics": ["Maven", "Gradle", "Dependency Management", "Build Lifecycle"]}, {"level": 31, "title": "Testing", "topics": ["JUnit 5", "Mockito", "Assertions", "Test Lifecycle", "Mock Objects"]}, {"level": 32, "title": "Logging", "topics": ["Java Logging", "Log4j", "SLF4J", "Logback"]}, {"level": 33, "title": "Serialization", "topics": ["Serializable", "Externalizable", "Version Control", "Security Concerns"]}, {"level": 34, "title": "JVM Internals", "topics": ["Class Loading", "Class Loader", "Bytecode", "JIT Compiler", "Garbage Collectors", "JVM Flags"]}, {"level": 35, "title": "Java 8-21 Features", "topics": ["Java 8: Lambda Expressions", "Java 8: Stream API", "Java 8: Optional", "Java 8: Functional Interfaces", "Java 8: Method References", "Java 8: Default Methods", "Java 8: Date & Time API", "Java 9: Module System", "Java 9: JShell", "Java 9: Private Interface Methods", "Java 10: var Keyword", "Java 11: New String Methods", "Java 11: HttpClient API", "Java 11: Files Methods", "Java 14: Switch Expressions", "Java 14: Records (preview)", "Java 15: Text Blocks", "Java 16: Records", "Java 17 (LTS): Sealed Classes", "Java 17 (LTS): Pattern Matching (preview)", "Java 21 (LTS): Virtual Threads", "Java 21 (LTS): Record Patterns", "Java 21 (LTS): Pattern Matching for switch", "Java 21 (LTS): Sequenced Collections", "Java 21 (LTS): String Templates (preview)"]}, {"level": 36, "title": "Data Structures & Algorithms in Java", "topics": ["Time Complexity", "Space Complexity", "Arrays", "Strings", "Linked List", "Stack", "Queue", "Hashing", "Trees", "BST", "Heap", "Trie", "Graphs", "Recursion", "Backtracking", "Dynamic Programming", "Greedy", "Sliding Window", "Two Pointers", "Binary Search", "Bit Manipulation"]}, {"level": 37, "title": "Spring Ecosystem (for Backend Development)", "topics": ["Spring Core", "Dependency Injection", "Spring Boot", "Spring MVC", "REST APIs", "Spring Data JPA", "Hibernate", "Spring Security", "JWT", "OAuth2", "Validation", "Microservices", "Spring Cloud"]}, {"level": 38, "title": "Best Practices", "topics": ["Coding Standards", "SOLID Principles", "DRY", "KISS", "Clean Code", "Exception Design", "Performance Optimization", "Secure Coding", "Documentation"]}];
+
+const STORAGE_KEY = 'java-roadmap-progress-v1';
+let checked = {};
+let openState = {};
+const totalTopics = ROADMAP.reduce((sum, lvl) => sum + lvl.topics.length, 0);
+
+async function loadProgress(){
+  // Primary: Claude.ai artifact storage (persists across sessions in the chat).
+  try{
+    if (window.storage && window.storage.get){
+      const res = await window.storage.get(STORAGE_KEY, false);
+      if (res && res.value){
+        checked = (JSON.parse(res.value)).checked || {};
+        return;
+      }
+    }
+  }catch(e){ /* key may not exist yet, or storage unavailable */ }
+
+  // Fallback: localStorage, for when this file is opened directly in a browser.
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw){
+      checked = (JSON.parse(raw)).checked || {};
+    }
+  }catch(e){
+    checked = {};
+  }
+}
+
+async function saveProgress(){
+  const payload = JSON.stringify({checked, savedAt: Date.now()});
+  let savedToClaudeStorage = false;
+  try{
+    if (window.storage && window.storage.set){
+      await window.storage.set(STORAGE_KEY, payload, false);
+      savedToClaudeStorage = true;
+    }
+  }catch(e){ /* fall through to localStorage */ }
+
+  try{
+    localStorage.setItem(STORAGE_KEY, payload);
+  }catch(e){ /* best effort, keep going with in-memory state */ }
+}
+
+function topicId(levelIdx, topicIdx){
+  return 'L' + levelIdx + '-T' + topicIdx;
+}
+
+function countCheckedInLevel(levelIdx){
+  const lvl = ROADMAP[levelIdx];
+  let n = 0;
+  for (let i=0;i<lvl.topics.length;i++){
+    if (checked[topicId(levelIdx,i)]) n++;
+  }
+  return n;
+}
+
+function totalChecked(){
+  let n = 0;
+  for (const k in checked) if (checked[k]) n++;
+  return n;
+}
+
+function renderPackages(){
+  const container = document.getElementById('packages');
+  container.innerHTML = '';
+
+  ROADMAP.forEach((lvl, levelIdx) => {
+    const doneCount = countCheckedInLevel(levelIdx);
+    const total = lvl.topics.length;
+    const isOpen = !!openState[levelIdx];
+    const allDone = doneCount === total;
+    const inProgress = doneCount > 0 && !allDone;
+
+    const pkg = document.createElement('div');
+    pkg.className = 'package' + (isOpen ? ' open' : '') + (allDone ? ' all-done' : '') + (inProgress ? ' in-progress' : '');
+    pkg.dataset.level = levelIdx;
+
+    const head = document.createElement('div');
+    head.className = 'package-head';
+    head.innerHTML = `
+      <span class="caret">&#9656;</span>
+      <span class="package-num">${String(lvl.level).padStart(2,'0')}</span>
+      <span class="package-title">${escapeHtml(lvl.title)}</span>
+      <span class="package-count">${doneCount}/${total}</span>
+    `;
+    head.addEventListener('click', () => {
+      openState[levelIdx] = !openState[levelIdx];
+      renderPackages();
+    });
+
+    const body = document.createElement('div');
+    body.className = 'package-body';
+
+    const ul = document.createElement('ul');
+    ul.className = 'topic-list';
+
+    lvl.topics.forEach((topic, topicIdx) => {
+      const id = topicId(levelIdx, topicIdx);
+      const isChecked = !!checked[id];
+      const isLast = topicIdx === lvl.topics.length - 1;
+      const li = document.createElement('li');
+      li.className = 'topic' + (isChecked ? ' checked' : '');
+      li.dataset.search = topic.toLowerCase();
+      li.innerHTML = `
+        <span class="tree">${isLast ? '&#9492;&#9472;' : '&#9500;&#9472;'}</span>
+        <span class="box">&#10003;</span>
+        <span class="topic-label">${escapeHtml(topic)}</span>
+      `;
+      li.addEventListener('click', async () => {
+        checked[id] = !checked[id];
+        li.classList.toggle('checked');
+        updateHeaderCounts();
+        updatePackageHeader(levelIdx);
+        await saveProgress();
+        updateFooterTimestamp();
+      });
+      ul.appendChild(li);
+    });
+
+    body.appendChild(ul);
+    pkg.appendChild(head);
+    pkg.appendChild(body);
+    container.appendChild(pkg);
+
+    if (isOpen){
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  });
+
+  applySearchFilter();
+}
+
+function updatePackageHeader(levelIdx){
+  const pkg = document.querySelector(`.package[data-level="${levelIdx}"]`);
+  if (!pkg) return;
+  const lvl = ROADMAP[levelIdx];
+  const doneCount = countCheckedInLevel(levelIdx);
+  const total = lvl.topics.length;
+  const allDone = doneCount === total;
+  const inProgress = doneCount > 0 && !allDone;
+
+  pkg.classList.toggle('all-done', allDone);
+  pkg.classList.toggle('in-progress', inProgress);
+  pkg.querySelector('.package-count').textContent = `${doneCount}/${total}`;
+
+  if (pkg.classList.contains('open')){
+    const body = pkg.querySelector('.package-body');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+function updateHeaderCounts(){
+  const done = totalChecked();
+  const pct = Math.round((done/totalTopics)*100);
+  const packagesDone = ROADMAP.reduce((n, lvl, i) => n + (countCheckedInLevel(i) === lvl.topics.length ? 1 : 0), 0);
+
+  document.getElementById('meta-done').textContent = done;
+  document.getElementById('meta-pct').textContent = pct + '%';
+  document.getElementById('meta-packages').textContent = packagesDone;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const statusText = document.getElementById('status-text');
+  const statusRow = document.getElementById('status-row');
+  const fill = document.getElementById('progress-fill');
+  const scanLine = document.getElementById('scan-line');
+
+  if (done === 0){
+    statusText.textContent = 'COMPILING';
+    statusRow.className = 'console-status status-progress';
+    fill.classList.remove('done');
+    scanLine.textContent = '[INFO] Scanning 38 packages, 392 classes...';
+  } else if (done === totalTopics){
+    statusText.textContent = 'BUILD SUCCESS';
+    statusRow.className = 'console-status status-done';
+    fill.classList.add('done');
+    scanLine.textContent = '[INFO] All 392 classes compiled across 38 packages.';
+  } else {
+    statusText.textContent = 'COMPILING';
+    statusRow.className = 'console-status status-progress';
+    fill.classList.remove('done');
+    scanLine.textContent = `[INFO] ${done} of 392 classes compiled...`;
+  }
+}
+
+function escapeHtml(str){
+  return str
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;');
+}
+
+function applySearchFilter(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const packages = document.querySelectorAll('.package');
+  packages.forEach(pkg => {
+    const items = pkg.querySelectorAll('.topic');
+    let anyVisible = false;
+    items.forEach(item => {
+      const matches = !q || item.dataset.search.includes(q);
+      item.classList.toggle('hidden', !matches);
+      if (matches) anyVisible = true;
+    });
+    if (q){
+      pkg.classList.add('open');
+      pkg.style.display = anyVisible ? '' : 'none';
+      const body = pkg.querySelector('.package-body');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    } else {
+      pkg.style.display = '';
+      const levelIdx = pkg.dataset.level;
+      pkg.classList.toggle('open', !!openState[levelIdx]);
+      const body = pkg.querySelector('.package-body');
+      body.style.maxHeight = openState[levelIdx] ? body.scrollHeight + 'px' : '0';
+    }
+  });
+}
+
+function updateFooterTimestamp(){
+  const el = document.getElementById('last-updated');
+  const now = new Date();
+  el.textContent = 'last updated ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+document.getElementById('search').addEventListener('input', applySearchFilter);
+
+document.getElementById('expand-all').addEventListener('click', () => {
+  ROADMAP.forEach((_, i) => openState[i] = true);
+  renderPackages();
+});
+
+document.getElementById('collapse-all').addEventListener('click', () => {
+  ROADMAP.forEach((_, i) => openState[i] = false);
+  renderPackages();
+});
+
+document.getElementById('reset-all').addEventListener('click', async () => {
+  if (!confirm('Reset all progress? This clears every checked topic.')) return;
+  checked = {};
+  await saveProgress();
+  updateHeaderCounts();
+  renderPackages();
+  document.getElementById('last-updated').textContent = 'progress reset';
+});
+
+(async function init(){
+  await loadProgress();
+  updateHeaderCounts();
+  renderPackages();
+  if (totalChecked() > 0){
+    updateFooterTimestamp();
+  }
+})();
+</script>
+
+</body>
+</html>
